@@ -1,6 +1,5 @@
 # WaymoCoverageAnalyzer
 
-[![CI](https://github.com/<your-handle>/waymo-coverage-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-handle>/waymo-coverage-analyzer/actions/workflows/ci.yml)
 
 > **On 200 real Waymo Motion V1.3.1 scenarios, one cluster holds 94× more data than the rarest.
 > One outlier scenario has a peak agent speed of 68 m/s and acceleration 282× the corpus mean —
