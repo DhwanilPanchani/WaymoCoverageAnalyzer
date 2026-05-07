@@ -34,14 +34,6 @@ packages = ["waymo_coverage"]
 [tool.setuptools.package-data]
 waymo_coverage = ["*.so", "*.pyd"]
 
-# ---------------------------------------------------------------------------
-# pybind11 C++ extension — compiled automatically by `pip install -e .`
-# ---------------------------------------------------------------------------
-[tool.setuptools.ext-modules]
-# Declared via setup.py (see below) because pyproject.toml does not yet have
-# a standardised way to express pybind11_add_module equivalent.
-# setup.py handles the CMake invocation instead.
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--tb=short -v"
