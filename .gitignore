@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+*.dylib
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Data files (large binary datasets)
+data/*.tfrecord*
+data/*.tfrecord-*
+!data/.gitkeep
+
+# Build artifacts (C++/CMake)
+build/
+*.a
+*.o
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+cmake_test_discovery_*.json
+
+# Generated outputs (keep .gitkeep)
+outputs/*.json
+outputs/*.html
+outputs/*.csv
+!outputs/.gitkeep
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/settings.local.json

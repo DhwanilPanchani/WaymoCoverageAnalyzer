@@ -1,0 +1,93 @@
+# WaymoCoverageAnalyzer — GitHub Actions CI
+# Purpose: Build C++ engine, run gtests and pytest on Ubuntu and macOS
+# Author: <your-name>
+
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # -----------------------------------------------------------------------
+      # System dependencies
+      # -----------------------------------------------------------------------
+      - name: Install system dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libeigen3-dev cmake
+
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install eigen cmake
+
+      # -----------------------------------------------------------------------
+      # Python dependencies (no WOD SDK — TF has platform-specific wheels and
+      # is not needed for any test in tests/; parser.py uses lazy imports)
+      # -----------------------------------------------------------------------
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            "numpy>=1.24" \
+            "scikit-learn>=1.3" \
+            "plotly>=5.18" \
+            "pybind11>=2.11" \
+            "pydantic>=2.5" \
+            "rich>=13.7" \
+            "typer>=0.9" \
+            pytest \
+            pytest-cov
+
+      # -----------------------------------------------------------------------
+      # Build C++ shared library + gtest binary
+      # -----------------------------------------------------------------------
+      - name: Configure CMake
+        run: |
+          PYBIND11_DIR=$(python -m pybind11 --cmakedir)
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            "-DPython3_EXECUTABLE=$(which python)"
+
+      - name: Build
+        run: cmake --build build --config Release -- -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+
+      # -----------------------------------------------------------------------
+      # Tests
+      # -----------------------------------------------------------------------
+      - name: Run C++ unit tests (gtest)
+        run: ./build/kinematics_tests
+
+      - name: Run Python test suite (pytest)
+        run: pytest tests/ -v --tb=short
+
+      # -----------------------------------------------------------------------
+      # Smoke-test the demo pipeline
+      # -----------------------------------------------------------------------
+      - name: Run end-to-end demo
+        run: python scripts/demo.py
+
+      - name: Verify demo outputs exist
+        run: |
+          test -f outputs/demo_dashboard.html
+          test -f outputs/demo_findings.json
+          test -f outputs/demo_features.csv

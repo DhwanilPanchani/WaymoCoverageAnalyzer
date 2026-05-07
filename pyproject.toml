@@ -1,0 +1,51 @@
+# WaymoCoverageAnalyzer — Python package configuration
+# Purpose: Declare package metadata, build system, and pybind11 extension artifact
+# Author: <your-name>
+
+[build-system]
+requires = ["setuptools>=68", "wheel", "pybind11>=2.11"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "waymo-coverage-analyzer"
+version = "0.1.0"
+description = "Ingests Waymo Open Dataset scenarios, extracts kinematic features via a C++ engine, and renders a coverage-gap dashboard."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "<your-name>" }]
+dependencies = [
+    "numpy>=1.24",
+    "scikit-learn>=1.3",
+    "plotly>=5.18",
+    "pybind11>=2.11",
+    "pydantic>=2.5",
+    "rich>=13.7",
+    "typer>=0.9",
+    "tensorflow>=2.12; platform_machine != 'arm64'",
+]
+
+[project.scripts]
+waymo-coverage = "waymo_coverage.cli:app"
+
+[tool.setuptools]
+packages = ["waymo_coverage"]
+
+[tool.setuptools.package-data]
+waymo_coverage = ["*.so", "*.pyd"]
+
+# ---------------------------------------------------------------------------
+# pybind11 C++ extension — compiled automatically by `pip install -e .`
+# ---------------------------------------------------------------------------
+[tool.setuptools.ext-modules]
+# Declared via setup.py (see below) because pyproject.toml does not yet have
+# a standardised way to express pybind11_add_module equivalent.
+# setup.py handles the CMake invocation instead.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short -v"
+
+[tool.coverage.run]
+source = ["waymo_coverage"]
+omit = ["tests/*", "scripts/*"]

@@ -1,0 +1,28 @@
+# WaymoCoverageAnalyzer — Python dependency list
+# Purpose: Pin all runtime and dev dependencies for reproducible installs
+# Author: <your-name>
+
+# Waymo Open Dataset SDK (installs scenario_pb2 protobuf definitions)
+waymo-open-dataset-tf-2-12-0
+
+# Core data and ML
+numpy>=1.24
+scikit-learn>=1.3
+tensorflow>=2.12  # CPU-only; required by WOD SDK
+
+# Visualization
+plotly>=5.18
+
+# Python ↔ C++ bridge
+pybind11>=2.11
+
+# Typed data models
+pydantic>=2.5
+
+# CLI and output
+rich>=13.7
+typer>=0.9
+
+# Testing
+pytest>=7.4
+pytest-cov>=4.1
