@@ -57,6 +57,7 @@ jobs:
             "typer>=0.9" \
             pytest \
             pytest-cov
+          pip install -e .
 
       # -----------------------------------------------------------------------
       # Build C++ shared library + gtest binary
